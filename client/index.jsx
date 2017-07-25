@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Route, Link, Redirect } from 'react-router-dom
 
 import Home from './components/home.jsx'
 import About from './components/about.jsx'
+import Footer from './components/footer.jsx'
+import Header from './components/header.jsx'
 
 class Index extends React.Component {
   constructor(props) {
@@ -16,17 +18,21 @@ class Index extends React.Component {
       { path: "/about",      name: "About",       btnType: "info",      component: About }
     ]
 
-    return (
-      <Router>
-      	<div style={{padding: "5%"}}>
-          {routes.map(route => <Route exact path={route.path} component={route.component} key={route.path} />)}
-          <div className="block">
-            {routes.map(route => <Link to={route.path} className={`button is-${route.btnType}`} key={route.path}>{route.name}</Link>)}
+      return (
+        <Router>
+          <div>
+            {routes.map(route =>
+                <Route exact path={route.path} component={route.component} key={route.path} />
+              )
+            }
           </div>
-      	</div>
-      </Router>
-    )
+        </Router>
+      )
   }
 }
 
 render(<Index />, document.getElementById('app'))
+
+// <div className="block">
+//   {routes.map(route => <Link to={route.path} className={`button is-${route.btnType}`} key={route.path}>{route.name}</Link>)}
+// </div>
