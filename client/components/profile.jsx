@@ -18,7 +18,7 @@ class Profile extends React.Component{
       <Header/>
       <div className='container' >
         <figure style={{textAlign: 'center', paddingTop: '40px'}}>
-          <img src="/images/js.jpg" height='256' width='256'/><br/>
+          <img src="/images/js.jpg" height='256' width='256' style={{borderRadius: '50%'}}/><br/>
           <a style={{textAlign: "center"}}>Change Profile Picture</a>
         </figure>
         <h1 className='title is-s2' style={{textAlign: "center", marginTop: '30px'}}>{this.state.fname} {this.state.lname}</h1>
@@ -71,7 +71,7 @@ class Profile extends React.Component{
         <div className='column is-one-third'>
           <h1 className='title is-s2' style={{textAlign: "center", paddingTop: '30px'}}>Suggested Units</h1>
           <div className = 'card'>
-            <Link to='/' style={{ textDecoration: 'none', border: '0', opacity: 'inherit' }}>
+            <Link to='/units/1' style={{ textDecoration: 'none', border: '0', opacity: 'inherit' }}>
               <header className="card-header">
                 <p className="card-header-title">
                   Enigma Unit

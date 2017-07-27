@@ -11,6 +11,8 @@ import ConfirmRegister from './components/confirm.jsx'
 import Profile from './components/profile.jsx'
 import Logout from './components/logout.jsx'
 import Units from './components/units.jsx'
+import Upload from './components/upload.jsx'
+import UnitDetail from './components/unitdetail.jsx'
 
 
 class Index extends React.Component {
@@ -26,7 +28,9 @@ class Index extends React.Component {
       { path: "/confirmed",    name: "Confirmed",     component: ConfirmRegister},
       { path: "/home",    name: "Profile",     component: Profile},
       { path: "/logout", name: "Logout",  component: Logout},
-      { path: "/units", name: "Units",  component: Units}
+      { path: "/units", name: "Units",  component: Units},
+      { path: "/units/:id", name: "UnitDetail",  component: UnitDetail},
+      { path: "/upload", name: "Upload",  component: Upload}
     ]
 
       return (

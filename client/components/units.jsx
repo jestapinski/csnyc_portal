@@ -10,7 +10,9 @@ class Units extends React.Component{
     return (
       <div>
         <Header/>
-        <h1>All Units</h1>
+        <div className='container'>
+          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30'}}>All Units</h1>
+        </div>
       </div>
     )
   }

@@ -84,6 +84,9 @@ class Header extends React.Component {
             </Link>
           </div>
           <div className="navbar-end">
+            <Link to='/upload' className="navbar-item">
+              Upload
+            </Link> 
             <Link to='/units' className="navbar-item">
               Units
             </Link> 
