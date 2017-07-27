@@ -84,9 +84,9 @@ class Header extends React.Component {
             </Link>
           </div>
           <div className="navbar-end">
-            <a className="navbar-item">
+            <Link to='/units' className="navbar-item">
               Units
-            </a> 
+            </Link> 
             {this.render_login()}
           </div>
         </div>

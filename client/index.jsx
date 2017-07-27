@@ -10,6 +10,7 @@ import Register from './components/register.jsx'
 import ConfirmRegister from './components/confirm.jsx'
 import Profile from './components/profile.jsx'
 import Logout from './components/logout.jsx'
+import Units from './components/units.jsx'
 
 
 class Index extends React.Component {
@@ -24,7 +25,8 @@ class Index extends React.Component {
       { path: "/register",    name: "Register",     component: Register},
       { path: "/confirmed",    name: "Confirmed",     component: ConfirmRegister},
       { path: "/home",    name: "Profile",     component: Profile},
-      { path: "/logout", name: "Logout",  component: Logout}
+      { path: "/logout", name: "Logout",  component: Logout},
+      { path: "/units", name: "Units",  component: Units}
     ]
 
       return (

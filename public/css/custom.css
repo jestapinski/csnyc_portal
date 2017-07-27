@@ -31,3 +31,20 @@ li.is-active a{
  max-width: 100%;
  height: auto;
    }
+
+.card{
+  opacity: 0.7;
+}
+
+.card:hover{
+  opacity: 1;
+}
+
+a.card{
+  opacity: inherit;
+  background-color: inherit;
+}
+
+a.card:hover{
+  opacity: inherit;
+}
