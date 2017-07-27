@@ -5,11 +5,8 @@ const config = require('./config')
 const apiRoutes = require('./api/index')
 
 const app = express()
-var creds = {'fname': 'Jordan', 'lname': 'Stapinski', 'email': 'jestapinski@yahoo.com'}
 
 var stitch = require("mongodb-stitch");
-// client = new stitch.StitchClient(config.APPNAME);
-// const db = client.service('mongodb', 'mongodb-atlas').db('portal_users');
 
 app.use('/api', apiRoutes)
 

@@ -37,8 +37,6 @@ function register_wrapper(creds){
 
 function process_registration_attempt(creds){
   console.log(creds);
-  console.log(creds.email)
-  console.log(client)
   let pwd = creds['pwd']
   delete creds['pwd']
   delete creds['confirm_pwd']
@@ -50,7 +48,6 @@ function process_registration_attempt(creds){
   }).catch(err => {
             console.error(err)
             console.log(err.error)});
-  //post creds
 
 }
 

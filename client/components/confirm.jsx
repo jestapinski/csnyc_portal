@@ -7,14 +7,14 @@ class ConfirmRegister extends React.Component {
     this.state = {
       'authed': false,
     }
-    console.log(props)
-    const search = props.location.search; // could be '?foo=bar'
+  }
+
+  componentWillMount(){
+    const search = props.location.search;
     const params = new URLSearchParams(search);
     const token = params.get('token')
     const tokenid = params.get('tokenId')
-    console.log(params.get('token'))
     process_successful_registration(token, tokenid, this.on_success)
-    // const foo = params.get('foo'); // bar
   }
 
   on_success(){
