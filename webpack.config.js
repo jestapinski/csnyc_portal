@@ -6,6 +6,9 @@ var APP_DIR = path.resolve(__dirname, 'client');
 
 var config = {
   entry: APP_DIR + '/index.jsx',
+  node: {
+    fs: 'empty'
+  },
   output: {
     path: BUILD_DIR,
     filename: 'bundle.js'
@@ -19,6 +22,7 @@ var config = {
       }
     ]
   }
+
 }
 
 module.exports = config;

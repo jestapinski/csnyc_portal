@@ -12,13 +12,8 @@ class Footer extends React.Component {
     ]
   }
 
-  // handle_click(name){
-  //   this.setState({active: name})
-  // }
-
   render_tab(route){
     const name = route.name
-    console.log(this.props)
     if (this.props.active === name){
       return <li 
         className='is-active' 

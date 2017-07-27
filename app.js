@@ -5,21 +5,11 @@ const config = require('./config')
 const apiRoutes = require('./api/index')
 
 const app = express()
+var creds = {'fname': 'Jordan', 'lname': 'Stapinski', 'email': 'jestapinski@yahoo.com'}
 
 var stitch = require("mongodb-stitch");
-client = new stitch.StitchClient(config.APPNAME);
-const db = client.service('mongodb', 'mongodb-atlas').db('portal_users');
-
-client.login().then(() =>
-  db.collection('users').updateOne({owner_id: client.authedId()}, {$set:{number:42}}, {upsert:true})
-    ).then(()=>
-      db.collection('users').find({owner_id: client.authedId()})
-        ).then(docs => {
-          console.log("Found docs", docs);
-          console.log("[MongoDB Stitch] Connected to Stitch");
-          }).catch(err => {
-            console.error(err);
-});
+// client = new stitch.StitchClient(config.APPNAME);
+// const db = client.service('mongodb', 'mongodb-atlas').db('portal_users');
 
 app.use('/api', apiRoutes)
 
@@ -30,7 +20,7 @@ app.use(express.static('public'))
 
 app.get('*', (req, res) => {
   res.render('pages/index', {
-    appname: config.APPNAME
+    appname: config.APPNAME,
   })
 })
 
