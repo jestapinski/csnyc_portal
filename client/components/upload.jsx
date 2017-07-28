@@ -16,8 +16,8 @@ class Upload extends React.Component{
                   'agenda_hrs': [''],
                   'agenda_mins': [''],
                   'agenda_desc': [''],
-                  'resources': '',
-                  'extensions': '',
+                  'resources': [''],
+                  'extensions': [''],
                   'assessment': '',
                   'email': cookie.load('email'),
                   'step': 0}
@@ -60,14 +60,26 @@ class Upload extends React.Component{
   }
 
   add_obj(){
-    console.log(this)
     const this_array = this.state.obj
     this_array.push('')
     this.setState({'obj': this_array})
   }
 
+  add_resource(){
+    const this_array = this.state.resources
+    this_array.push('')
+    console.log(this_array)
+    this.setState({'resources': this_array})
+  }
+
+  add_extension(){
+    const this_array = this.state.extensions
+    this_array.push('')
+    console.log(this_array)
+    this.setState({'extensions': this_array})
+  }
+
   add_agenda(){
-    console.log(this)
     const agenda_array = this.state.agenda
     const hrs_array = this.state.agenda_hrs
     const mins_array = this.state.agenda_mins
@@ -106,12 +118,16 @@ class Upload extends React.Component{
     this.setState({'agenda_desc': this_array}, () => {console.log(this.state)})
   }
 
-  handle_resources(e){
-    this.setState({'resources': e.target.value})
+  handle_resources(e, num){
+    const this_array = this.state.resources
+    this_array[num] = e.target.value
+    this.setState({'resources': this_array}, () => {console.log(this.state)})
   }
 
-  handle_extensions(e){
-    this.setState({'extensions': e.target.value})
+  handle_extensions(e, num){
+    const this_array = this.state.extensions
+    this_array[num] = e.target.value
+    this.setState({'extensions': this_array}, () => {console.log(this.state)})
   }
 
   handle_assessment(e){
@@ -231,11 +247,11 @@ class Upload extends React.Component{
             <div className="field-body">
               <div className="field">
               <label className="label">Hours</label>
-                <input className="input is-hovered" type="number" value='0' onChange={(e) => {this.handle_agenda_hrs(e, i)}} onKeyPress={(e) => this.key_down(e)}/>
+                <input className="input is-hovered" type="number" value={this.state.agenda_hrs[i]} onChange={(e) => {this.handle_agenda_hrs(e, i)}} onKeyPress={(e) => this.key_down(e)}/>
               </div>
               <div className="field">
               <label className="label">Minutes</label>
-                <input className="input is-hovered" type="number" value='0' onChange={(e) => {this.handle_agenda_mins(e, i)}} onKeyPress={(e) => this.key_down(e)}/>
+                <input className="input is-hovered" type="number" value={this.state.agenda_mins[i]} onChange={(e) => {this.handle_agenda_mins(e, i)}} onKeyPress={(e) => this.key_down(e)}/>
               </div>
             </div>
           </div>
@@ -279,20 +295,24 @@ class Upload extends React.Component{
 
   render_resources(){
     let placeholder = 'Resources'
-    let value = this.state.resources
     return (
       <div>
         <Header/>
         <div className='container'>
-          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30px'}}>Upload a Unit</h1>
+          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30px', paddingBottom: '30px'}}>Upload a Unit</h1>
         </div>
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
+            <label className="title is-5">What are some external resources for the unit (if any)?</label><br/>
 
-        <div className="control" style={{paddingTop: '30px'}}>
-          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_resources(e)}} onKeyPress={(e) => this.key_down(e)}/>
-        </div>
+        {this.state.resources.map((val, i) =>
+          <div className="control" style={{paddingTop: '30px'}} key={i}>
+            <input className="input is-hovered" type="text" placeholder={placeholder} value={val} onChange={(e) => {this.handle_resources(e, i)}} onKeyPress={(e) => this.key_down(e)}/>
+          </div>
+          )
+        }
 
         <hr/>
+        <a className="button is-primary" style={{marginRight: '10px'}} onClick={() => {this.add_resource()}}>Add Another Resource</a>
         <div style={{marginTop: '10px'}}>
         <a className="button is-primary" style={{marginRight: '10px'}} onClick={() => {this.transition_to_extensions()}}>Go!</a>
         <a className="button is-danger" onClick={() => {this.go_back()}}>Back</a>
@@ -309,15 +329,20 @@ class Upload extends React.Component{
       <div>
         <Header/>
         <div className='container'>
-          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30px'}}>Upload a Unit</h1>
+          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30px', paddingBottom: '30px'}}>Upload a Unit</h1>
         </div>
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
+            <label className="title is-5">What are some lesson extensions off of this unit (if any)?</label><br/>
 
-        <div className="control" style={{paddingTop: '30px'}}>
-          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_extensions(e)}} onKeyPress={(e) => this.key_down(e)}/>
+        {this.state.extensions.map((val, i) =>
+
+        <div className="control" style={{paddingTop: '30px'}} key={i}>
+          <input className="input is-hovered" type="text" placeholder={placeholder} value={val} onChange={(e) => {this.handle_extensions(e, i)}} onKeyPress={(e) => this.key_down(e)}/>
         </div>
+        )}
 
         <hr/>
+        <a className="button is-primary" style={{marginRight: '10px'}} onClick={() => {this.add_extension()}}>Add Another Extension</a>
         <div style={{marginTop: '10px'}}>
         <a className="button is-primary" style={{marginRight: '10px'}} onClick={() => {this.transition_to_assessment()}}>Go!</a>
         <a className="button is-danger" onClick={() => {this.go_back()}}>Back</a>
@@ -335,9 +360,10 @@ class Upload extends React.Component{
       <div>
         <Header/>
         <div className='container'>
-          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30px'}}>Upload a Unit</h1>
+          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30px', paddingBottom: '30px'}}>Upload a Unit</h1>
         </div>
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
+            <label className="title is-5">What are some means of assessing understanding?</label><br/>
 
         <div className="control" style={{paddingTop: '30px'}}>
           <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_assessment(e)}} onKeyPress={(e) => this.key_down(e)}/>
@@ -355,7 +381,14 @@ class Upload extends React.Component{
   }
 
   submit(){
-    return <div>whee</div>
+    return (
+      <div>
+        <Header/>
+        <div className='container'>
+          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30px'}}>Upload Successful!</h1>
+        </div>
+      </div>
+    )
   }
 
 // TODO map checkboxes to a single function for concision
