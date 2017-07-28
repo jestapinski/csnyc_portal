@@ -18,7 +18,7 @@ class Upload extends React.Component{
                   'agenda_desc': [''],
                   'resources': [''],
                   'extensions': [''],
-                  'assessment': '',
+                  'assessment': [''],
                   'email': cookie.load('email'),
                   'step': 0}
     this.enter_function = (() => {
@@ -79,6 +79,13 @@ class Upload extends React.Component{
     this.setState({'extensions': this_array})
   }
 
+  add_assessment(){
+    const this_array = this.state.assessment
+    this_array.push('')
+    console.log(this_array)
+    this.setState({'assessment': this_array})
+  }
+
   add_agenda(){
     const agenda_array = this.state.agenda
     const hrs_array = this.state.agenda_hrs
@@ -130,8 +137,10 @@ class Upload extends React.Component{
     this.setState({'extensions': this_array}, () => {console.log(this.state)})
   }
 
-  handle_assessment(e){
-    this.setState({'assessment': e.target.value})
+  handle_assessment(e, num){
+    const this_array = this.state.assessment
+    this_array[num] = e.target.value
+    this.setState({'assessment': this_array}, () => {console.log(this.state)})
   }
 
   transition_to_obj(){
@@ -355,7 +364,6 @@ class Upload extends React.Component{
 
   render_assessment(){
     let placeholder = 'Assessment'
-    let value = this.state.assessment
     return (
       <div>
         <Header/>
@@ -365,11 +373,15 @@ class Upload extends React.Component{
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
             <label className="title is-5">What are some means of assessing understanding?</label><br/>
 
-        <div className="control" style={{paddingTop: '30px'}}>
-          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_assessment(e)}} onKeyPress={(e) => this.key_down(e)}/>
+        {this.state.assessment.map((val, i) =>
+
+        <div className="control" style={{paddingTop: '30px'}} key={i}>
+          <input className="input is-hovered" type="text" placeholder={placeholder} value={val} onChange={(e) => {this.handle_assessment(e, i)}} onKeyPress={(e) => this.key_down(e)}/>
         </div>
 
+        )}
         <hr/>
+        <a className="button is-primary" style={{marginBottom: '10px'}} onClick={() => {this.add_assessment()}}>Add Another Assessment</a>
         <div style={{marginTop: '10px'}}>
         <a className="button is-primary" style={{marginRight: '10px'}} onClick={() => {this.transition_to_done()}}>Go!</a>
         <a className="button is-danger" onClick={() => {this.go_back()}}>Back</a>
