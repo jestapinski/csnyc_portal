@@ -48,3 +48,7 @@ a.card{
 a.card:hover{
   opacity: inherit;
 }
+
+input.input{
+  margin-top: 5px;
+}

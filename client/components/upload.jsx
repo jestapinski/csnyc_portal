@@ -12,7 +12,10 @@ class Upload extends React.Component{
                   'num_checks': 0,
                   'desc': '',
                   'obj': [''],
-                  'agenda': '',
+                  'agenda': [''],
+                  'agenda_hrs': [''],
+                  'agenda_mins': [''],
+                  'agenda_desc': [''],
                   'resources': '',
                   'extensions': '',
                   'assessment': '',
@@ -63,9 +66,44 @@ class Upload extends React.Component{
     this.setState({'obj': this_array})
   }
 
-  handle_agenda(e){
-    this.setState({'agenda': e.target.value})
-    console.log(this.state)
+  add_agenda(){
+    console.log(this)
+    const agenda_array = this.state.agenda
+    const hrs_array = this.state.agenda_hrs
+    const mins_array = this.state.agenda_mins
+    const desc_array = this.state.agenda_desc
+    agenda_array.push('')
+    hrs_array.push('')
+    mins_array.push('')
+    desc_array.push('')
+    this.setState({'agenda': agenda_array})
+    this.setState({'agenda_hrs': hrs_array})
+    this.setState({'agenda_mins': mins_array})
+    this.setState({'agenda_desc': desc_array})
+  }
+
+  handle_agenda(e, num){
+    const this_array = this.state.agenda
+    this_array[num] = e.target.value
+    this.setState({'agenda': this_array}, () => {console.log(this.state)})
+  }
+
+  handle_agenda_hrs(e, num){
+    const this_array = this.state.agenda_hrs
+    this_array[num] = e.target.value
+    this.setState({'agenda_hrs': this_array}, () => {console.log(this.state)})
+  }
+
+  handle_agenda_mins(e, num){
+    const this_array = this.state.agenda_mins
+    this_array[num] = e.target.value
+    this.setState({'agenda_mins': this_array}, () => {console.log(this.state)})
+  }
+
+  handle_agenda_desc(e, num){
+    const this_array = this.state.agenda_desc
+    this_array[num] = e.target.value
+    this.setState({'agenda_desc': this_array}, () => {console.log(this.state)})
   }
 
   handle_resources(e){
@@ -124,10 +162,12 @@ class Upload extends React.Component{
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
 
         <div className="control" style={{paddingTop: '30px'}}>
+          <label className="title is-5">What would you like to name the unit?</label>
           <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_name(e)}} onKeyPress={(e) => this.key_down(e)}/>
         </div>
 
         <div className="control" style={{paddingTop: '30px'}}>
+          <label className="title is-5">Description</label>
           <input className="input is-hovered" type="text" placeholder={placeholder_desc} value={value_desc} onChange={(e) => {this.handle_desc(e)}} onKeyPress={(e) => this.key_down(e)}/>
         </div>
 
@@ -141,18 +181,18 @@ class Upload extends React.Component{
   }
 
   render_learning_objectives(){
-    let placeholder = 'Learning Objectives'
+    let placeholder = 'Learning Objective'
     return (
       <div>
         <Header/>
         <div className='container'>
-          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30px'}}>Upload a Unit</h1>
+          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30px', paddingBottom: '30px'}}>Upload a Unit</h1>
         </div>
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
-
+          <label className="title is-5">What are some learning objectives you have for students using the unit?</label>
         {this.state.obj.map((value, i) => 
           (!i) ?
-          (<div className="control" style={{paddingTop: '30px'}} key={i}>
+          (<div className="control" style={{paddingTop: '20px'}} key={i}>
             <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_obj(e, i)}} onKeyPress={(e) => this.key_down(e, this.add_obj.bind(this))}/>
           </div>) : 
           (<div className="control" style={{paddingTop: '10px'}} key={i}>
@@ -177,15 +217,57 @@ class Upload extends React.Component{
       <div>
         <Header/>
         <div className='container'>
-          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30px'}}>Upload a Unit</h1>
+          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30px', paddingBottom: '30px'}}>Upload a Unit</h1>
         </div>
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
+            <label className="title is-5">What is a lesson agenda you have for the unit?</label><br/>
 
-        <div className="control" style={{paddingTop: '30px'}}>
-          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_agenda(e)}} onKeyPress={(e) => this.key_down(e)}/>
-        </div>
+        {this.state.agenda.map((value, i) =>
+          <div key={i}>
+          <div className="field">
+            <div className="field-label is-normal">
+              <label className="title is-5" style={{float: 'left'}}>Timing for sub-activity</label><br/>
+            </div>
+            <div className="field-body">
+              <div className="field">
+              <label className="label">Hours</label>
+                <input className="input is-hovered" type="number" value='0' onChange={(e) => {this.handle_agenda_hrs(e, i)}} onKeyPress={(e) => this.key_down(e)}/>
+              </div>
+              <div className="field">
+              <label className="label">Minutes</label>
+                <input className="input is-hovered" type="number" value='0' onChange={(e) => {this.handle_agenda_mins(e, i)}} onKeyPress={(e) => this.key_down(e)}/>
+              </div>
+            </div>
+          </div>
 
-        <hr/>
+          <div className="field">
+            <div className="field-label is-normal">
+              <label className="title is-5" style={{float: 'left'}}>Sub-Activity Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><br/>
+            </div>
+            <div className="field-body">
+              <div className="field">
+                <input className="input is-hovered" type="text" placeholder='Activity Name' value={value} onChange={(e) => {this.handle_agenda(e, i)}} onKeyPress={(e) => this.key_down(e)}/>
+              </div>
+            </div>
+          </div>
+
+          <div className="field">
+            <div className="field-label is-normal">
+              <label className="title is-5" style={{float: 'left'}}>Short Description &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label><br/>
+            </div>
+            <div className="field-body">
+              <div className="field">
+                <input className="input is-hovered" type="text" placeholder='Activity Description' value={this.state.agenda_desc[i]} onChange={(e) => {this.handle_agenda_desc(e, i)}} onKeyPress={(e) => this.key_down(e)}/>
+              </div>
+            </div>
+          </div>          
+          <hr/>
+          </div>
+          )
+        }
+
+        <a className="button is-primary" style={{marginRight: '10px'}} onClick={() => {this.add_agenda()}}>Add Another Item</a>
+
         <div style={{marginTop: '10px'}}>
         <a className="button is-primary" style={{marginRight: '10px'}} onClick={() => {this.transition_to_resources()}}>Go!</a>
         <a className="button is-danger" style={{marginRight: '10px'}} onClick={() => {this.go_back()}}>Back</a>
@@ -301,6 +383,8 @@ class Upload extends React.Component{
     if (this.state.num_checks >= 7){
       disabled = ''
     }
+    //BELOW IS FOR DEBUGGING
+    disabled=''
     return (
       <div>
         <Header/>
