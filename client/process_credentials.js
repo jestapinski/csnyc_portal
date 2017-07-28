@@ -8,7 +8,9 @@ client.login().then( result => {
         });
 const mongoClient = client.service("mongodb", "mongodb-atlas");
 const db = mongoClient.db("portal_users");
+const unit_db = mongoClient.db('portal_units')
 const coll = db.collection("users");
+const unit_collection = 'units'
 
 function login_wrapper(username, password, callback_success, callback_failure){
 
@@ -57,4 +59,13 @@ function process_successful_registration(token, tokenid){
             console.log(err.error)});
 }
 
-export { login_wrapper, register_wrapper, process_successful_registration }
+function post_unit(creds){
+  delete creds['step']
+  unit_db.collection(unit_collection).insertOne(creds, function(err, data){
+  }).then((result) => {console.log(result)}).catch((err) => {
+            delete creds['confirmed']
+            console.error(err)
+            console.log(err.error)});
+}
+
+export { login_wrapper, register_wrapper, process_successful_registration, post_unit }

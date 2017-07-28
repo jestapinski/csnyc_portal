@@ -1,18 +1,45 @@
 import React from 'react'
 import Header from './header.jsx'
+import { post_unit } from '../process_credentials.js'
+import cookie from 'react-cookies'
+
 
 class Upload extends React.Component{
   constructor(props){
     super(props)
     this.state = {'confirmed': false,
                   'unit_name': '',
+                  'num_checks': 0,
                   'desc': '',
-                  'obj': '',
+                  'obj': [''],
                   'agenda': '',
                   'resources': '',
                   'extensions': '',
                   'assessment': '',
+                  'email': cookie.load('email'),
                   'step': 0}
+    this.enter_function = (() => {
+      const this_step = this.state.step
+      this.setState({'step': this_step + 1})
+    });
+  }
+
+  key_down(e, f) {
+    if (e.key == 'Enter'){
+      if (f){
+        f()
+        return
+      }
+      this.enter_function()
+    }
+  }
+
+  handle_click(e){
+    console.log(e)
+    console.log(e.target.checked)
+    const is_checked = e.target.checked
+    const num_checks = this.state.num_checks - 1 + (2 * is_checked)
+    this.setState({'num_checks': num_checks})
   }
 
   handle_name(e){
@@ -23,12 +50,22 @@ class Upload extends React.Component{
     this.setState({'desc': e.target.value})
   }
 
-  handle_obj(e){
-    this.setState({'obj': e.target.value})
+  handle_obj(e, num){
+    const this_array = this.state.obj
+    this_array[num] = e.target.value
+    this.setState({'obj': this_array})
+  }
+
+  add_obj(){
+    console.log(this)
+    const this_array = this.state.obj
+    this_array.push('')
+    this.setState({'obj': this_array})
   }
 
   handle_agenda(e){
     this.setState({'agenda': e.target.value})
+    console.log(this.state)
   }
 
   handle_resources(e){
@@ -43,38 +80,41 @@ class Upload extends React.Component{
     this.setState({'assessment': e.target.value})
   }
 
-  transition_to_desc(){
+  transition_to_obj(){
     this.setState({'step': 1})
   }
 
-  transition_to_obj(){
+  transition_to_agenda(){
     this.setState({'step': 2})
   }
 
-  transition_to_agenda(){
+  transition_to_resources(){
     this.setState({'step': 3})
   }
 
-  transition_to_resources(){
+  transition_to_extensions(){
     this.setState({'step': 4})
   }
 
-  transition_to_extensions(){
+  transition_to_assessment(){
     this.setState({'step': 5})
   }
 
-  transition_to_assessment(){
+  transition_to_done(){
     this.setState({'step': 6})
+    post_unit(this.state)
   }
 
-  transition_to_assessment(){
-    this.setState({'step': 7})
+  go_back(){
+    const current_step = this.state.step
+    this.setState({'step': current_step - 1})
   }
 
   render_name(){
-    console.log(this.state)
-    let placeholder = 'Unit Name'
+    const placeholder = 'Unit Name'
+    const placeholder_desc = 'Unit Description'
     let value = this.state.unit_name
+    let value_desc = this.state.desc
     return (
       <div>
         <Header/>
@@ -84,33 +124,17 @@ class Upload extends React.Component{
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
 
         <div className="control" style={{paddingTop: '30px'}}>
-          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_name(e)}}/>
+          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_name(e)}} onKeyPress={(e) => this.key_down(e)}/>
         </div>
-
-        <a className="button is-primary" onClick={() => {this.transition_to_desc()}}>Go!</a>
-
-        </div></div>
-      </div>
-    )
-  }
-
-  render_description(){
-    let placeholder = 'Unit Description'
-    let value = this.state.desc
-    return (
-      <div>
-        <Header/>
-        <div className='container'>
-          <h1 className='title is-2' style={{textAlign: 'center', paddingTop: '30px'}}>Upload a Unit</h1>
-        </div>
-        <div className='columns'><div className='column is-half is-offset-one-quarter'>
 
         <div className="control" style={{paddingTop: '30px'}}>
-          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_desc(e)}}/>
+          <input className="input is-hovered" type="text" placeholder={placeholder_desc} value={value_desc} onChange={(e) => {this.handle_desc(e)}} onKeyPress={(e) => this.key_down(e)}/>
         </div>
 
+        <hr/>
+        <div style={{marginTop: '10px'}}>
         <a className="button is-primary" onClick={() => {this.transition_to_obj()}}>Go!</a>
-
+        </div>
         </div></div>
       </div>
     )
@@ -118,7 +142,6 @@ class Upload extends React.Component{
 
   render_learning_objectives(){
     let placeholder = 'Learning Objectives'
-    let value = this.state.obj
     return (
       <div>
         <Header/>
@@ -127,12 +150,21 @@ class Upload extends React.Component{
         </div>
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
 
-        <div className="control" style={{paddingTop: '30px'}}>
-          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_obj(e)}}/>
-        </div>
+        {this.state.obj.map((value, i) => 
+          (!i) ?
+          (<div className="control" style={{paddingTop: '30px'}} key={i}>
+            <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_obj(e, i)}} onKeyPress={(e) => this.key_down(e, this.add_obj.bind(this))}/>
+          </div>) : 
+          (<div className="control" style={{paddingTop: '10px'}} key={i}>
+            <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_obj(e, i)}} onKeyPress={(e) => this.key_down(e, this.add_obj.bind(this))}/>
+          </div>)
+        )}
 
-        <a className="button is-primary" onClick={() => {this.transition_to_agenda()}}>Go!</a>
-
+        <hr/>
+        <a className="button is-primary" style={{marginBottom: '10px'}} onClick={() => {this.add_obj()}}>Add Another Objective</a>
+        <br/>
+        <a className="button is-primary" style={{marginRight: '10px'}} onClick={() => {this.transition_to_agenda()}}>Go!</a>
+        <a className="button is-danger" onClick={() => {this.go_back()}}>Back</a>
         </div></div>
       </div>
     )
@@ -150,12 +182,15 @@ class Upload extends React.Component{
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
 
         <div className="control" style={{paddingTop: '30px'}}>
-          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_agenda(e)}}/>
+          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_agenda(e)}} onKeyPress={(e) => this.key_down(e)}/>
         </div>
 
-        <a className="button is-primary" onClick={() => {this.transition_to_resources()}}>Go!</a>
-
+        <hr/>
+        <div style={{marginTop: '10px'}}>
+        <a className="button is-primary" style={{marginRight: '10px'}} onClick={() => {this.transition_to_resources()}}>Go!</a>
+        <a className="button is-danger" style={{marginRight: '10px'}} onClick={() => {this.go_back()}}>Back</a>
         </div></div>
+        </div>
       </div>
     )    
   }
@@ -172,11 +207,14 @@ class Upload extends React.Component{
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
 
         <div className="control" style={{paddingTop: '30px'}}>
-          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_resources(e)}}/>
+          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_resources(e)}} onKeyPress={(e) => this.key_down(e)}/>
         </div>
 
-        <a className="button is-primary" onClick={() => {this.transition_to_extensions()}}>Go!</a>
-
+        <hr/>
+        <div style={{marginTop: '10px'}}>
+        <a className="button is-primary" style={{marginRight: '10px'}} onClick={() => {this.transition_to_extensions()}}>Go!</a>
+        <a className="button is-danger" onClick={() => {this.go_back()}}>Back</a>
+        </div>
         </div></div>
       </div>
     )    
@@ -194,10 +232,14 @@ class Upload extends React.Component{
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
 
         <div className="control" style={{paddingTop: '30px'}}>
-          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_extensions(e)}}/>
+          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_extensions(e)}} onKeyPress={(e) => this.key_down(e)}/>
         </div>
 
-        <a className="button is-primary" onClick={() => {this.transition_to_assessment()}}>Go!</a>
+        <hr/>
+        <div style={{marginTop: '10px'}}>
+        <a className="button is-primary" style={{marginRight: '10px'}} onClick={() => {this.transition_to_assessment()}}>Go!</a>
+        <a className="button is-danger" onClick={() => {this.go_back()}}>Back</a>
+        </div>
 
         </div></div>
       </div>
@@ -216,10 +258,14 @@ class Upload extends React.Component{
         <div className='columns'><div className='column is-half is-offset-one-quarter'>
 
         <div className="control" style={{paddingTop: '30px'}}>
-          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_assessment(e)}}/>
+          <input className="input is-hovered" type="text" placeholder={placeholder} value={value} onChange={(e) => {this.handle_assessment(e)}} onKeyPress={(e) => this.key_down(e)}/>
         </div>
 
-        <a className="button is-primary" onClick={() => {this.transition_to_done()}}>Go!</a>
+        <hr/>
+        <div style={{marginTop: '10px'}}>
+        <a className="button is-primary" style={{marginRight: '10px'}} onClick={() => {this.transition_to_done()}}>Go!</a>
+        <a className="button is-danger" onClick={() => {this.go_back()}}>Back</a>
+        </div>
 
         </div></div>
       </div>
@@ -232,26 +278,28 @@ class Upload extends React.Component{
 
 // TODO map checkboxes to a single function for concision
   render(){
+    let disabled = 'true'
     if (this.state.confirmed){
       switch (this.state.step){
         case 0:
           return this.render_name()
         case 1:
-          return this.render_description()
-        case 2:
           return this.render_learning_objectives()
-        case 3:
+        case 2:
           return this.render_agenda()
-        case 4:
+        case 3:
           return this.render_resources()
-        case 5:
+        case 4:
           return this.render_extensions()
-        case 6:
+        case 5:
           return this.render_assessment()
         default:
           return this.submit()
       }
       return 
+    }
+    if (this.state.num_checks >= 7){
+      disabled = ''
     }
     return (
       <div>
@@ -264,7 +312,7 @@ class Upload extends React.Component{
           <div className='columns'><div className='column is-half is-offset-one-quarter'>
 
           <label className="checkbox subtitle is-5">
-            <input type="checkbox"/>
+            <input type="checkbox" onClick={(e) => this.handle_click(e)}/>
               <span style={{paddingLeft: '20px'}}>
               A <span className='title is-5'>Name</span> for the Unit
               </span>
@@ -272,7 +320,7 @@ class Upload extends React.Component{
 
           <br/>
           <label className="checkbox subtitle is-5">
-            <input type="checkbox"/>
+            <input type="checkbox" onClick={(e) => this.handle_click(e)}/>
               <span style={{paddingLeft: '20px'}}>
               A <span className='title is-5'>Description</span> of the Unit (under 150 characters!)
               </span>
@@ -280,7 +328,7 @@ class Upload extends React.Component{
 
           <br/>
           <label className="checkbox subtitle is-5">
-            <input type="checkbox"/>
+            <input type="checkbox" onClick={(e) => this.handle_click(e)}/>
               <span style={{paddingLeft: '20px'}}>
               A <span className='title is-5'>List of Learning Objectives</span> (To Upload or Type)
               </span>
@@ -288,7 +336,7 @@ class Upload extends React.Component{
 
           <br/>
           <label className="checkbox subtitle is-5">
-            <input type="checkbox"/>
+            <input type="checkbox" onClick={(e) => this.handle_click(e)}/>
               <span style={{paddingLeft: '20px'}}>
               A <span className='title is-5'>Lesson Agenda</span> (time/description for each activity, in PDF or typed text)
               </span>
@@ -296,7 +344,7 @@ class Upload extends React.Component{
 
           <br/>
           <label className="checkbox subtitle is-5">
-            <input type="checkbox"/>
+            <input type="checkbox" onClick={(e) => this.handle_click(e)}/>
               <span style={{paddingLeft: '20px'}}>
               Any <span className='title is-5'>External Resources</span> (files to upload, and links, if needed)
               </span>
@@ -304,7 +352,7 @@ class Upload extends React.Component{
 
           <br/>
           <label className="checkbox subtitle is-5">
-            <input type="checkbox"/>
+            <input type="checkbox" onClick={(e) => this.handle_click(e)}/>
               <span style={{paddingLeft: '20px'}}>
               Any <span className='title is-5'>Outside Extensions</span> to the unit.
               </span>
@@ -312,14 +360,14 @@ class Upload extends React.Component{
 
           <br/>
           <label className="checkbox subtitle is-5">
-            <input type="checkbox"/>
+            <input type="checkbox" onClick={(e) => this.handle_click(e)}/>
               <span style={{paddingLeft: '20px'}}>
               A means of <span className='title is-5'>Assessment</span> to the unit (PDF or typed text).
               </span>
           </label>
           <br/><br/>
 
-          <a className="button is-primary" onClick={() => {this.setState({'confirmed': true})}}>Go!</a>
+          <a disabled={disabled} className="button is-primary" onClick={() => {if(!disabled) this.setState({'confirmed': true})}}>Go!</a>
 
           </div>
           </div>
