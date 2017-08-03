@@ -10,7 +10,7 @@ class ConfirmRegister extends React.Component {
   }
 
   componentWillMount(){
-    const search = props.location.search;
+    const search = this.props.location.search;
     const params = new URLSearchParams(search);
     const token = params.get('token')
     const tokenid = params.get('tokenId')

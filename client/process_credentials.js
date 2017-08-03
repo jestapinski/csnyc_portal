@@ -61,6 +61,7 @@ function process_successful_registration(token, tokenid){
 
 function post_unit(creds){
   delete creds['step']
+  creds.agenda_mins.map((x) => x ? x : '0')
   unit_db.collection(unit_collection).insertOne(creds, function(err, data){
   }).then((result) => {console.log(result)}).catch((err) => {
             delete creds['confirmed']
@@ -68,4 +69,10 @@ function post_unit(creds){
             console.log(err.error)});
 }
 
-export { login_wrapper, register_wrapper, process_successful_registration, post_unit }
+function find_units(filters, callback){
+  unit_db.collection(unit_collection).find(filters).then((result) => {
+    callback(result)
+  })
+}
+
+export { login_wrapper, register_wrapper, process_successful_registration, post_unit, find_units }

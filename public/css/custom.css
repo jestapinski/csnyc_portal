@@ -1,29 +1,10 @@
-/*.hero-head, .hero-foot{
-	background-color: #000000;
-}
-
-li.is-active a{
-	background-color: #FFFFFF;
-	color: #000000;
-}*/
-
-/*nav {
-	background-color: #3e3f3a !important; 
-}*/
-
-/*.hero{
-	background-image: url('classroom.jpg') !important;
-	background-size:  cover;
-}*/
-
 .bg-img { 
-        background-image: url(/images/classroom.jpg) ;
-        background-position: center center;
-        background-repeat:  no-repeat;
-        background-attachment: fixed;
-        background-size:  cover;
-        background-color: #999;
-
+  background-image: url(/images/classroom.jpg) ;
+  background-position: center center;
+  background-repeat:  no-repeat;
+  background-attachment: fixed;
+  background-size:  cover;
+  background-color: #999;
  }
 
 .img-responsive {
@@ -51,4 +32,8 @@ a.card:hover{
 
 input.input{
   margin-top: 5px;
+}
+
+label.checkBox{
+  color: white;
 }
